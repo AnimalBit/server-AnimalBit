@@ -29,8 +29,8 @@ module.exports = {
                     return result
                 } else {
                     return User.create({
-                        fullname: result.name,
-                        email: result.email,
+                        fullname: userData.name,
+                        email: userData.email,
                         password: process.env.DEFAULT_PASSWORD_OAUTH,
                         matches: []
                     })

@@ -13,7 +13,7 @@ module.exports = function(req, res, next){
                     console.log(result)
                     next()
                 } else {
-                    res.status(500).json({
+                    res.status(400).json({
                         message: 'Token does not match'
                     })
                 }
@@ -23,6 +23,6 @@ module.exports = function(req, res, next){
                 next(500)
             })
     } catch(err) {
-        next(500)
+        next(401)
     }
 }

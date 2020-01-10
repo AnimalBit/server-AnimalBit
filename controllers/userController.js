@@ -12,6 +12,35 @@ const shibeApi = require('../axios/shibe')
 let answers = [];
 
 module.exports = {
+
+    manualSignUp(req, res, next) {
+        const {email,password} = req.body
+        
+        const values = {
+            email, 
+            password
+        }
+
+        User.findOne({
+            email
+        })
+            .then(user => {
+                if (!user) {
+                    User.create(values)
+                        .then(createdUser => {
+                            const access_token = jwt.sign({
+                                _id: createdUser._id
+                            }, process.env.SECRET_JWT)
+                            res.status(200).json({access_token})
+                        })
+                } else {
+                    console.log('User already exist')
+                    next(500)
+                }
+            })
+
+    },
+
     getUsers(req, res, next) {
         User.find().populate('matches')
             .then(data => {

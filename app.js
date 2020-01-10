@@ -6,6 +6,9 @@ const cors = require('cors')
 
 const mongoose = require('mongoose')
 mongoose.connect('mongodb://localhost/AnimalBit', {useNewUrlParser: true, useUnifiedTopology: true})
+require('./models/user')
+require('./models/match')
+
 
 const db = mongoose.connection;
 

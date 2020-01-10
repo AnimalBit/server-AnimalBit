@@ -2,6 +2,15 @@ const { OAuth2Client } = require('google-auth-library')
 const client = new OAuth2Client(process.env.CLIENT_ID)
 const jwt = require('jsonwebtoken')
 const User = require('../models/user')
+const Match = require('../models/match')
+const axios = require('axios')
+
+const catApi = require('../axios/cat')
+const duckApi = require('../axios/duck')
+const shibeApi = require('../axios/shibe')
+
+let answers = [];
+
 module.exports = {
     getUsers(req, res, next) {
         User.find().populate('matches')
@@ -46,5 +55,61 @@ module.exports = {
                 console.log(err.message)
                 next(400)
             })
+    },
+    async startGame(req, res, next) {
+        let images = [];
+        for (let i = 0; i < 10; i++) {
+            let index = Math.floor(Math.random() * 3)
+            if (index === 0) {
+                await catApi
+                .get('/images/search?limit=1')
+                .then(response => {
+                    images.push({ image: response.data[0].url, answer: 'cat' })
+                })
+                .catch(err => {
+                    next(err)
+                })
+            } else if (index === 1) {
+                await duckApi
+                .get('/random')
+                .then(response => {
+                    images.push({ image: response.data.url, answer: 'duck' })
+                })
+                .catch(err => {
+                    next(err)
+                })
+            } else if (index === 2) {
+                await shibeApi
+                .get('/shibes')
+                .then(response => {
+                    images.push({ image: response.data[0], answer: 'dog' })
+                })
+                .catch(err => {
+                    next(err)
+                })
+            }
+        }
+        res.status(200).json(images)
+    },
+    checkAnswers(req, res, next) {
+        let userAnswers = req.body.userChoices;
+        let userQuestions = req.body.gameQuestions;
+        let correctAnswers = 0;
+        for (let i = 0; i < userQuestions.length; i++) {
+            if (userQuestions[i].answer === userAnswers[i]) {
+                correctAnswers++
+            }
+        }
+        Match.create({
+            userId: req.currentUser,
+            correctAnswers: correctAnswers
+        })
+        .then(result => {
+            res.status(200).json(result)
+        })
+        .catch(err => {
+            console.log(err.message)
+            next(err)
+        })  
     }
 }

@@ -1,11 +1,12 @@
 module.exports = function(err, req, res, next){
-	if (err){		
+	if (err){	
+		console.log(err)	
 		if (err == 400) {
-			// res.status(err).json({msg: 'Bad Request, sintaks anda salah'})
+			res.status(err).json({msg: 'Bad Request, wrong syntax'})
 		} else if(err == 401) {
-			res.status(err).json({msg: 'Username atau Password anda salah'})
+			res.status(err).json({msg: 'Username/password is wrong'})
 		} else if(err == 403) {
-			res.status(err).json({msg: 'anda harus login terlebih dahulu'})
+			res.status(err).json({msg: 'Login required'})
 		} else if(err == 409) {
 			res.status(err).json({msg: 'Already exist'})
 		} else {

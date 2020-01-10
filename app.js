@@ -4,6 +4,8 @@ const app = express()
 const routes = require('./routes/index')
 const cors = require('cors')
 
+const errorHandler = require('./middleware/errorHandler')
+
 const mongoose = require('mongoose')
 mongoose.connect('mongodb://localhost/AnimalBit', {useNewUrlParser: true, useUnifiedTopology: true})
 require('./models/user')
@@ -22,6 +24,8 @@ app.use(express.json())
 app.use(cors())
 app.use('/', routes)
 
+// err Handloer
+// app.use('/', errorHandler)
 app.listen(process.env.PORT, () => {
     console.log(`Server running on port ${3000}`)
 })

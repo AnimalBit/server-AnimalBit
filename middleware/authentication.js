@@ -2,7 +2,8 @@ const jwt = require('jsonwebtoken')
 const User = require('../models/user')
 module.exports = function(req, res, next){
     try {
-        let token = req.headers.google_token
+        let token = req.headers.access_token
+        console.log(token)
         const decoded = jwt.verify(token, process.env.SECRET_JWT)
         req.currentUser = decoded.id
         User.findOne({

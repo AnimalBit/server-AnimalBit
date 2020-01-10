@@ -24,8 +24,7 @@ app.use(express.json())
 app.use(cors())
 app.use('/', routes)
 
-// err Handloer
-// app.use('/', errorHandler)
+app.use('/', errorHandler)
 app.listen(process.env.PORT, () => {
     console.log(`Server running on port ${3000}`)
 })

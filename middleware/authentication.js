@@ -14,7 +14,7 @@ module.exports = function(req, res, next){
                     next()
                 } else {
                     res.status(400).json({
-                        message: 'Token does not match'
+                        message: 'User is no longer valid'
                     })
                 }
                 
